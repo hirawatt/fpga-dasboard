@@ -2,6 +2,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 import pandas as pd
 import numpy as np
+import time
 
 # credentials
 page_title = st.secrets['initialize']['page_title']
@@ -15,7 +16,7 @@ api_secret = st.secrets['api_secret']
 # streamlit
 st.set_page_config(
     '{}'.format(page_title),
-    ':moneybag:',
+    ':cyclone:',
     layout='wide',
     initial_sidebar_state='expanded',
     menu_items={
@@ -40,6 +41,8 @@ def footer():
 
 def main() -> None:
     # dashboard - buttons
+    placeholder = st.empty()
+
     col1, col2, col3 = st.columns(3, gap="large")
     col1.button('On')
     col2.button('Off')
@@ -53,23 +56,26 @@ def main() -> None:
     col3.metric("Humidity", "86%", "4%")
 
     # dashboard - charts
-    st.subheader('FPGA live sensor data')
-    co1, co2 = st.columns(2, gap="large")
-    random_data = np.random.randn(20, 3)
-    chart_data = pd.DataFrame(
-        random_data,
-        columns=['Temperature', 'Wind', 'Humidity'])
+    with placeholder.container():
+        st.subheader('FPGA live sensor data')
+        co1, co2 = st.columns(2, gap="large")
+        random_data = np.random.randn(20, 3)
+        chart_data = pd.DataFrame(
+            random_data,
+            columns=['Temperature', 'Wind', 'Humidity'])
 
-    with co1:
-        st.line_chart(chart_data)    
-        with st.expander("Raw Data"):
-            st.experimental_show(random_data)
+        with co1:
+            st.line_chart(chart_data)    
+            with st.expander("Raw Data"):
+                st.experimental_show(random_data)
 
-    with co2:
-        sensor_data = [1, 5, 2, 6, 2, 1]
-        st.bar_chart({"sensor_data": sensor_data})
-        with st.expander("Raw Data"):
-            st.experimental_show(sensor_data)
+        with co2:
+            sensor_data = [1, 5, 2, 6, 2, 1]
+            st.bar_chart({"sensor_data": sensor_data})
+            with st.expander("Raw Data"):
+                st.experimental_show(sensor_data)
+        # Sleep/update timer
+        time.sleep(5)
 
 
     # sidebar
